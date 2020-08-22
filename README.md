@@ -9,6 +9,10 @@ David Robinson shares [the #RStats code that he writes during his screencasts](h
 
 Check out David Robinson's talk [Ten Tremendous Tricks for Tidyverse](https://www.youtube.com/watch?v=NDHSBUN_rVU). You might also be interested in Emily Robinson's talk [The Lesser Known Stars of the Tidyverse](https://www.youtube.com/watch?v=ax4LXQ5t38k)
 
+OK, enough blabla, let's get to it. 
+
+## 
+
 filter != other
 
 fct_reorder_within dans tidytext

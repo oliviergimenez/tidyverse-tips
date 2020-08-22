@@ -1,14 +1,3 @@
----
-title: "Tidyverse tips gathered from Dave Robinson's screencasts"
-author: "Olivier Gimenez"
-date: "22/08/2020"
-output: 
-  html_document:
-    keep_md: true
----
-
-
-
 ## Motivation
 
 Below is a list of tips and tricks I have gathered from David Robinson's screencasts, which I use for my own `R` peregrinations. Hopefully, these tips will be useful to others.

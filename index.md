@@ -1,6 +1,6 @@
 ## Motivation
 
-Below are the notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations. Hopefully, these notes will be useful to others.
+Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations. Hopefully, these notes will be useful to others.
 
 It took me some time to fully transition from base `R` to the `Tidyverse`. I really clicked when I started watching screencasts by [David Robinson](http://varianceexplained.org/){:target="_blank" rel="noopener"} on his [Youtube channel](https://www.youtube.com/user/safe4democracy/featured){:target="_blank" rel="noopener"}. 
 
@@ -37,24 +37,24 @@ library(tidyverse)
 ## x dplyr::lag()    masks stats::lag()
 ```
 
-Set [the theme](https://ggplot2.tidyverse.org/reference/ggtheme.html){:target="_blank" rel="noopener"} you like for data visualisation with `ggplot2`:
+By the way, if you need to explore the functions of a package, a trick is to use the autocompletion in `RStudio`. Just type in `?package_name::` and you should see the functions of the `package_name` package in a pull-down menu. 
+
+Now set [the theme](https://ggplot2.tidyverse.org/reference/ggtheme.html){:target="_blank" rel="noopener"} you like for data visualisation with `ggplot2`:
 
 ```r
 theme_set(theme_light())
 ```
 
-For illustration, I will use the `starwars` dataset that comes with `tidyverse`:
+For illustration, I will use the `starwars` dataset that comes with the `tidyverse` packages:
 
 ```r
 data("starwars")
 starwars_raw <- starwars
 ```
 
-If you need to explore the functions of a package, a trick is to use the autocompletion in `RStudio`. Just type in `?package_name::` and you should see the functions of the `package_name` package in a pull-down menu. 
-
 ## Inspect the data
 
-Use the viewer to inspect your dataset:
+Use the viewer to inspect your data:
 
 ```r
 starwars_raw %>%
@@ -95,7 +95,9 @@ starwars <- starwars_raw %>%
 ```
 
 
-## Count, count, aaaand count
+## Count, count, count
+
+### Crude counting
 
 To get a sense of the data, count stuff and use `sort = TRUE` to arrange things by decreasing counts:
 
@@ -135,6 +137,8 @@ starwars %>%
 ## 3 <NA>          4
 ```
 
+Filter out missing values before counting:
+
 ```r
 starwars %>% 
   filter(!is.na(gender)) %>% # filter out missing values
@@ -148,6 +152,8 @@ starwars %>%
 ## 1 masculine    66
 ## 2 feminine     17
 ```
+
+Count along more than one variable:
 
 ```r
 starwars %>% 
@@ -170,6 +176,8 @@ starwars %>%
 ## 10 Besalisk masculine     1
 ## # … with 32 more rows
 ```
+
+### Weighted counting
 
 You may want to use the `wt` argument to get a count weighted by another variable. Compare the call to `count()` with and without the `wt` argument in the example below. When `wt = mass` is used, we compute `sum(mass)` for each species, otherwise we compute the number of rows in each species:
 
@@ -217,7 +225,7 @@ starwars %>%
 ## # … with 28 more rows
 ```
 
-You can add the counts to your tibble by using `add_count()`, check out the `n` column:
+You can add the counts to your tibble by using `add_count()`. Check out the `n` column:
 
 ```r
 starwars %>%
@@ -240,6 +248,8 @@ starwars %>%
 ## 10 Obi-Wan Kenobi     masculine Human      77 1821.
 ## # … with 77 more rows
 ```
+
+### Complete counting
 
 When you count by two or more variables, it may happen that you don't have all combinations. No worries, you're covered with `complete()`. Compare the call to `complete()` without and with in the example below. The Aleena species has no feminine representative, but this info is implicit. When `complete()` is used, a row is added with a `NA` for feminine gender: 
 

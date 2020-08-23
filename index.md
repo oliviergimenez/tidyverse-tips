@@ -91,7 +91,7 @@ We are gonna use only a few columns of the original dataset:
 
 ```r
 starwars <- starwars_raw %>%
-  select(name, gender, species, mass)
+  select(name, gender, species, mass, height)
 ```
 
 
@@ -285,13 +285,195 @@ starwars %>%
 ## 4 Droid   masculine     5
 ```
 
+If you don't like `NA`, you may use a `0` instead with the `fill = list()` argument:
+
+```r
+starwars %>% 
+  filter(species %in% c('Aleena','Droid')) %>%
+  count(species, gender) %>%
+  complete(species, gender, fill = list(n = 0))
+```
+
+```
+## # A tibble: 4 x 3
+##   species gender        n
+##   <chr>   <chr>     <dbl>
+## 1 Aleena  feminine      0
+## 2 Aleena  masculine     1
+## 3 Droid   feminine      1
+## 4 Droid   masculine     5
+```
 
 
 
-<!--   filter(originDate >= "1960-01-01") %>% -->
-<!--   count(acquisition, -->
-<!--         decade = 5 * (year(originDate) %/% 5)) %>% -->
-<!--   complete(acquisition, decade, fill = list(n = 0)) -->
+```r
+starwars %>%
+  count(height_classes = 10 * (height %/% 10))
+```
+
+```
+## # A tibble: 18 x 2
+##    height_classes     n
+##             <dbl> <int>
+##  1             60     1
+##  2             70     1
+##  3             80     1
+##  4             90     4
+##  5            110     1
+##  6            120     1
+##  7            130     1
+##  8            150     3
+##  9            160    10
+## 10            170    15
+## 11            180    20
+## 12            190    12
+## 13            200     4
+## 14            210     2
+## 15            220     3
+## 16            230     1
+## 17            260     1
+## 18             NA     6
+```
+
+Also works for years (think of decades for example). 
+
+You may change the name of the n column
+
+```r
+starwars %>%
+  count(height_classes = 10 * (height %/% 10), 
+        name = "class_size")
+```
+
+```
+## # A tibble: 18 x 2
+##    height_classes class_size
+##             <dbl>      <int>
+##  1             60          1
+##  2             70          1
+##  3             80          1
+##  4             90          4
+##  5            110          1
+##  6            120          1
+##  7            130          1
+##  8            150          3
+##  9            160         10
+## 10            170         15
+## 11            180         20
+## 12            190         12
+## 13            200          4
+## 14            210          2
+## 15            220          3
+## 16            230          1
+## 17            260          1
+## 18             NA          6
+```
+
+
+```r
+starwars %>%
+  filter(!is.na(species)) %>%
+  count(species = fct_lump(species, 3))
+```
+
+```
+## # A tibble: 4 x 2
+##   species     n
+##   <fct>   <int>
+## 1 Droid       6
+## 2 Gungan      3
+## 3 Human      35
+## 4 Other      39
+```
+
+Pipe a `filter(species != 'Other')` if you'd like to get rid of the `Other` category created by `fct_lump`. 
+
+
+```r
+starwars %>%
+  summarize(across(where(is.numeric), 
+                   list(mean = ~mean(.x, na.rm = TRUE), 
+                        sd = ~sd(.x, na.rm = TRUE))))
+```
+
+```
+## # A tibble: 1 x 4
+##   mass_mean mass_sd height_mean height_sd
+##       <dbl>   <dbl>       <dbl>     <dbl>
+## 1      97.3    169.        174.      34.8
+```
+
+`list(mean = mean, sd = sd)` if no missing values. Also check out `across(starts_with())` and `across(everywhere())`
+
+
+```r
+?parse_number
+parse_number("$1000")
+```
+
+```
+## [1] 1000
+```
+
+```r
+parse_number("1,234,567.78")
+```
+
+```
+## [1] 1234568
+```
+
+## Pipe a (G)LM
+
+### Logistic regression
+
+
+```r
+by_hectare %>%
+  mutate(n_gray = round(pct_gray * n)) %>%
+  glm(cbind(n_gray, n - n_gray) ~ lat, data = ., family = "binomial") %>%
+  summary()
+```
+
+### Simple linear regression
+
+
+```r
+horror_movies %>%
+  filter(!is.na(movie_rating)) %>%
+  mutate(movie_rating = fct_lump(movie_rating, 5)) %>%
+  lm(review_rating ~ movie_rating, data = .) %>%
+  anova()
+```
+
+### To go further
+
+Placer broom et tidymodels. 
+
+
+
+
+<!-- gdpr_violations %>% -->
+<!--   count(country = fct_lump(country, 8, w = price), -->
+<!--         sort = TRUE, wt = price, name = "total_price") %>% -->
+<!--   mutate(country = fct_reorder(country, total_price)) %>% -->
+<!--   ggplot(aes(total_price, country)) + -->
+<!--   geom_col() + -->
+<!--   scale_x_continuous(labels = dollar_format()) -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!-- animal_outcomes %>% -->
@@ -308,7 +490,6 @@ starwars %>%
 
 
 
-<!-- mutate(position = fct_lump(position, 15)) %>% -->
 
 <!-- milk_products_tidied %>% -->
 <!--   group_by(product = fct_lump(product, 6, w = lbs_per_person), -->
@@ -334,7 +515,6 @@ starwars %>%
 <!--        title = "What are the most common threats to plants by continent?") -->
 
 
-<!-- rvest avec sa petite app pour recuperer html depuis wikipedia entre autres -->
 
 <!-- The decade trick is one of his bests. -->
 
@@ -371,14 +551,18 @@ starwars %>%
 <!--   scale_x_log10() -->
 
 
+<!-- rvest avec sa petite app pour recuperer html depuis wikipedia entre autres -->
 <!-- learn regex to be used w/ str_remove etc -->
+<!-- big fan of gganimate, rvest, gggraph (library(ggraph), library(igraph)), broom as well. Aime bien aussi packages countrycode et WDI. Et glmnet aussi.  -->
+
+
+
 
 <!-- mutate(type = str_remove(type, "\\d+")) -->
 
 <!-- ggmap -->
 <!-- them_map -->
 
-<!-- big fan of gganimate, rvest, gggraph (library(ggraph), library(igraph)), broom as well. Aime bien aussi packages countrycode et WDI. Et glmnet aussi.  -->
 
 
 <!-- utilisation de accross -->
@@ -393,10 +577,6 @@ starwars %>%
 <!--                         issues = ~ sum(. > 0), -->
 <!--                         avg = ~ mean(.[depicted > 0])))) -->
 
-<!-- coffee_ratings %>% -->
-<!--   summarize(across(everything(), ~ mean(!is.na(.)))) %>% -->
-<!--   gather() %>% -->
-<!--   View() -->
 
 
 <!-- replace gather and spread by pivot_longer et pivot_wider -->
@@ -457,8 +637,6 @@ starwars %>%
 <!--   facet_wrap(~ superhero) -->
 
 
-<!-- when first read, use data_raw, then cleaning in data -->
-
 <!-- always forget about the midpoint -->
 
 <!-- ggplot(joined_trees, aes(fill = percent_maple)) + -->
@@ -481,15 +659,6 @@ starwars %>%
 
 
 
-<!-- parse_number -->
-
-<!-- thanksgiving_survey_raw <- tidytuesdayR::tt_load('2018-11-20')  -->
-
-<!-- thanksgiving_survey <- thanksgiving_survey_raw$thanksgiving_meals %>% -->
-<!--   mutate(family_income = fct_reorder(family_income, parse_number(family_income))) -->
-
-<!-- thanksgiving_survey_raw$family_income -->
-<!-- parse_number(thanksgiving_survey_raw$family_income) -->
 
 
 
@@ -513,19 +682,6 @@ starwars %>%
 <!-- crossing function, cf riddlers -->
 
 
-
-<!-- ## pipe a (g)lm  -->
-
-<!-- by_hectare %>% -->
-<!--   mutate(n_gray = round(pct_gray * n)) %>% -->
-<!--   glm(cbind(n_gray, n - n_gray) ~ lat, data = ., family = "binomial") %>% -->
-<!--   summary() -->
-
-<!-- horror_movies %>% -->
-<!--   filter(!is.na(movie_rating)) %>% -->
-<!--   mutate(movie_rating = fct_lump(movie_rating, 5)) %>% -->
-<!--   lm(review_rating ~ movie_rating, data = .) %>% -->
-<!--   anova() -->
 
 <!-- ## barre d'erreur -->
 
@@ -582,15 +738,6 @@ starwars %>%
 <!--   geom_boxplot() -->
 <!-- ``` -->
 
-<!-- ## create var in count -->
-
-<!-- gdpr_violations %>% -->
-<!--   count(country = fct_lump(country, 8, w = price), -->
-<!--         sort = TRUE, wt = price, name = "total_price") %>% -->
-<!--   mutate(country = fct_reorder(country, total_price)) %>% -->
-<!--   ggplot(aes(total_price, country)) + -->
-<!--   geom_col() + -->
-<!--   scale_x_continuous(labels = dollar_format()) -->
 
 <!-- ## PCA too  -->
 

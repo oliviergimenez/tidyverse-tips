@@ -1,1 +1,1 @@
-## Some notes I have taken on David Robinson's screencasts, with `R` tips and tricks, rendered as a GitHub page.
+### Some notes I have taken on David Robinson's screencasts, with `R` tips and tricks, rendered as a GitHub page.

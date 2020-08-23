@@ -1,13 +1,12 @@
-
 ## Motivation
 
 Below are the notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations. Hopefully, these notes will be useful to others.
 
 It took me some time to fully transition from base `R` to the `Tidyverse`. I really clicked when I started watching screencasts by [David Robinson](http://varianceexplained.org/){:target="_blank" rel="noopener"} on his [Youtube channel](https://www.youtube.com/user/safe4democracy/featured){:target="_blank" rel="noopener"}. 
 
-Each week, he goes live for an hour or so, and does exploratory analyses in `R` with data he has never seen before (!). The data come from the [#TidyTuesday project](https://github.com/rfordatascience/tidytuesday){:target="_blank" rel="noopener"} brought to us by the [R for Data Science Online Learning Community](https://www.rfordatasci.com/){:target="_blank" rel="noopener"}. This is an awesome initiative, check out the [beautiful data visualisations on Twitter](https://twitter.com/hashtag/tidytuesday){:target="_blank" rel="noopener"}. 
+Each week, he goes live for an hour or so, and does exploratory analyses in `R` with data he has never seen before (!). The data come from the [#TidyTuesday project](https://github.com/rfordatascience/tidytuesday){:target="_blank" rel="noopener"} brought to us by the [R for Data Science Online Learning Community](https://www.rfordatasci.com/){:target="_blank" rel="noopener"}. This is an awesome initiative, check out the [beautiful data visualisations](https://twitter.com/hashtag/tidytuesday){:target="_blank" rel="noopener"} on Twitter. 
 
-David Robinson shares [the #RStats code he writes during his screencasts](https://github.com/dgrtwo/data-screencasts){:target="_blank" rel="noopener"}, and provides [annotations](https://github.com/dgrtwo/data-screencasts/tree/master/screencast-annotations){:target="_blank" rel="noopener"} for us to grasp at once what the screencast is about, and what the main steps of the analyses are (including the `R` functions he used).     
+David Robinson shares [the #RStats code](https://github.com/dgrtwo/data-screencasts){:target="_blank" rel="noopener"} he writes during his screencasts, and provides [annotations](https://github.com/dgrtwo/data-screencasts/tree/master/screencast-annotations){:target="_blank" rel="noopener"} for us to grasp at once what the screencast is about, and what the main steps of the analyses are (including the `R` functions he used).     
 
 Check out David Robinson's talk [Ten Tremendous Tricks for Tidyverse](https://www.youtube.com/watch?v=NDHSBUN_rVU){:target="_blank" rel="noopener"}. You might also be interested in Emily Robinson's talk [The Lesser Known Stars of the Tidyverse](https://www.youtube.com/watch?v=ax4LXQ5t38k){:target="_blank" rel="noopener"}.
 

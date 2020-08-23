@@ -88,7 +88,7 @@ starwars_raw
 
 `chr`, `int`, `dbl`, `fct` and `list` are for characters, integers, doubles, factors and lists respectively. 
 
-We are gonna only a few columns of the original dataset:
+We are gonna use only a few columns of the original dataset:
 
 ```r
 starwars <- starwars_raw %>%

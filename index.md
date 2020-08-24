@@ -1,16 +1,16 @@
 # Motivation
 
-Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations in the `Tidyverse` framework. Hopefully, these notes will be useful to others. In case it is useful, I wrote [a quick and dirty introduction to the `Tidyverse`](https://github.com/oliviergimenez/intro_tidyverse#introduction-to-the-tidyverse){:target="_blank" rel="noopener"} some time ago.    
+Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations in the `Tidyverse` framework. Hopefully, these notes will be useful to others. I assume you know the basics of the Tidyverse. If not, check out the [quick and dirty introduction to the `Tidyverse`](https://github.com/oliviergimenez/intro_tidyverse#introduction-to-the-tidyverse){:target="_blank" rel="noopener"} I wrote some time ago. 
 
 It took me some time to fully transition from base `R` to the `Tidyverse`. I really clicked when I started watching screencasts by [David Robinson](http://varianceexplained.org/){:target="_blank" rel="noopener"} on his [Youtube channel](https://www.youtube.com/user/safe4democracy/featured){:target="_blank" rel="noopener"}. 
 
-Each week, he goes live for an hour or so, and does exploratory analyses in `R` with data he has never seen before (!). The data come from the [#TidyTuesday project](https://github.com/rfordatascience/tidytuesday){:target="_blank" rel="noopener"} brought to us by the [R for Data Science Online Learning Community](https://www.rfordatasci.com/){:target="_blank" rel="noopener"}. This is an awesome initiative, check out the [beautiful data visualisations](https://twitter.com/hashtag/tidytuesday){:target="_blank" rel="noopener"} on Twitter. 
+Each week, he goes live for an hour or so, and does exploratory analyses in `R` with data he has never seen before (!). The data come from the [#TidyTuesday project](https://github.com/rfordatascience/tidytuesday){:target="_blank" rel="noopener"} brought to us by the [R for Data Science Online Learning Community](https://www.rfordatasci.com/){:target="_blank" rel="noopener"}. This is an awesome initiative, check out the [beautiful #tidytuesday visualisations](https://twitter.com/hashtag/tidytuesday){:target="_blank" rel="noopener"} on Twitter. 
 
-David Robinson shares [the #RStats code](https://github.com/dgrtwo/data-screencasts){:target="_blank" rel="noopener"} he writes during his screencasts, and provides [annotations](https://github.com/dgrtwo/data-screencasts/tree/master/screencast-annotations){:target="_blank" rel="noopener"} for us to grasp at once what the screencast is about, and what the main steps of the analyses are (including the `R` functions he used).     
+David Robinson shares [the #RStats code](https://github.com/dgrtwo/data-screencasts){:target="_blank" rel="noopener"} he writes during his screencasts, and provides [annotations](https://github.com/dgrtwo/data-screencasts/tree/master/screencast-annotations){:target="_blank" rel="noopener"} for us to grasp at once what the screencast is about, and what the main steps of the analyses are (including the `R` functions he uses).     
 
-Check out David Robinson's talk [Ten Tremendous Tricks for Tidyverse](https://www.youtube.com/watch?v=NDHSBUN_rVU){:target="_blank" rel="noopener"}. You might also be interested in Emily Robinson's talk [The Lesser Known Stars of the Tidyverse](https://www.youtube.com/watch?v=ax4LXQ5t38k){:target="_blank" rel="noopener"}.
+Below are my personal notes, with an obvious bias towards the tricks I find useful for my own work. Check out David Robinson's talk [Ten Tremendous Tricks for Tidyverse](https://www.youtube.com/watch?v=NDHSBUN_rVU){:target="_blank" rel="noopener"}. You will also be interested in Emily Robinson's talk [The Lesser Known Stars of the Tidyverse](https://www.youtube.com/watch?v=ax4LXQ5t38k){:target="_blank" rel="noopener"}.
 
-Let's get to it. First data wrangling, second data visualisation. I will use the awesome illustrations by [Allison Horst](https://www.allisonhorst.com/){:target="_blank" rel="noopener"} throughout, check out her work [here](https://github.com/allisonhorst/stats-illustrations){:target="_blank" rel="noopener"}. 
+Let's get to it. First data wrangling, second data visualisation. I will use some of the awesome illustrations by [Allison Horst](https://www.allisonhorst.com/){:target="_blank" rel="noopener"} throughout, check out her work [here](https://github.com/allisonhorst/stats-illustrations){:target="_blank" rel="noopener"}. 
 
 # Setting the scene
 
@@ -47,7 +47,7 @@ Now set [the theme](https://ggplot2.tidyverse.org/reference/ggtheme.html){:targe
 theme_set(theme_light())
 ```
 
-For illustration, I will use the `starwars` dataset that comes with the `tidyverse` packages:
+For illustration, I will use the `starwars` dataset that comes with the `tidyverse` collection of packages:
 
 ```r
 data("starwars")
@@ -58,7 +58,7 @@ starwars_raw <- starwars
 
 ## Inspect the data
 
-Use the viewer to inspect your data:
+Use the viewer `View()` to inspect your data:
 
 ```r
 starwars_raw %>%
@@ -158,7 +158,7 @@ starwars %>%
 
 ![](dplyr_filter.jpg)
 
-Count along more than one variable:
+Count with respect to more than one variable:
 
 ```r
 starwars %>% 
@@ -256,7 +256,7 @@ starwars %>%
 
 ### Complete counting
 
-When you count by two or more variables, it may happen that you don't have all combinations. No worries, you're covered with `complete()`. Compare the call to `complete()` without and with in the example below. The Aleena species has no feminine representative, but this info is implicit. When `complete()` is used, a row is added with a `NA` for feminine gender: 
+When you count with respect to two or more variables, it may happen that you don't have all combinations. No worries, you're covered with `complete()`. Compare the example below without and with the call to `complete()`. The Aleena species has no feminine representative, but this info is implicit. When `complete()` is used, a row is added with a `NA` for feminine gender: 
 
 ```r
 starwars %>% 
@@ -313,7 +313,7 @@ starwars %>%
 
 ![](dplyr_across.png)
 
-There is a new function in `dplyr` which allows applying functions to columns of a dataset. In the example below, I compute the mean and standard deviation (storing them in a list) across all columns with numeric format (`where(is.numeric)`), while taking care of the missing values (`na.rm = TRUE`):
+There is a new function in `dplyr` which allows applying functions to columns of a dataset. In the example below, I compute the mean and standard deviation (storing them in a list) across all columns which have a numeric format (`where(is.numeric)`), while taking care of the missing values (`na.rm = TRUE`):
 
 ```r
 starwars %>%
@@ -328,11 +328,11 @@ starwars %>%
 ##       <dbl>   <dbl>       <dbl>     <dbl>
 ## 1      97.3    169.        174.      34.8
 ```
-Just use `list(mean = mean, sd = sd)` if no missing values. Also check out `across(starts_with())` and `across(everywhere())` for even more flexibility. 
+Just use `list(mean = mean, sd = sd)` if you have no missing values. Also check out `across(starts_with())` and `across(everywhere())` for even more flexibility. 
 
 ### The decade trick
 
-Probably the best of his tricks, Dave Robinson often uses the integer division `%/%` to count things at coarse levels. For example, here how you would count the number of character in classes of height of width 10 centimeters. 
+Probably the best of David Robinson's tricks, he uses the integer division `%/%` to count things at coarse levels. For example, below is how you would count the number of characters in classes of height of width 10 centimeters. 
 
 ```r
 starwars %>%
@@ -365,7 +365,7 @@ starwars %>%
 
 This trick also works for years `count(year = 10 * (year %/% 10))`, think of decades for example, hence the 'decade trick'. 
 
-You may tuned a bit the output by changing the name of the `n` column:
+You may tune a bit the output by changing the name of the `n` column:
 
 ```r
 starwars %>%
@@ -399,7 +399,7 @@ starwars %>%
 
 ### Lumping levels together
 
-It has always been a nightmare to deal with factors in `R`. The package `forcats` is a game changer. For example, the function `fct_lump` is useful to manipulate factors with many levels. You just lump levels together by preserving the `n` most common values, the other levels are lumped in a new `Other` level:
+It has always been a nightmare to deal with factors in `R`. The package `forcats` is a game changer. For example, the function `fct_lump()` is useful to manipulate factors with many levels. You just lump levels together by preserving the `n` most common values, the other levels are lumped in a new `Other` level:
 
 ```r
 starwars %>%
@@ -421,7 +421,7 @@ If you'd like to get rid of `Other`, just pipe a `filter(species != 'Other')`.
 
 ## Pipe a (G)LM
 
-Statistical analyses can easily be piped in your tidyverse workflow. You will find two simple examples below. Check out the [`broom` package](https://cran.r-project.org/web/packages/broom/vignettes/broom.html){:target="_blank" rel="noopener"} which cleans up the messy output of built-in `R` functions like `lm` or `glm`. 
+Statistical analyses can easily be piped in your tidyverse workflow. You will find two simple examples below. Check out the [`broom` package](https://cran.r-project.org/web/packages/broom/vignettes/broom.html){:target="_blank" rel="noopener"} which cleans up the messy output of built-in `R` functions like `lm()` or `glm()`. 
 
 ![](broom_package.png)
 
@@ -461,7 +461,7 @@ starwars %>%
 ## 2 height         0.639     0.626     1.02    0.312
 ```
 
-Get several summary statistics, including the $R^2$ and the AIC:
+Get several summary statistics with function `glance()`, including the $R^2$ and the AIC:
 
 ```r
 starwars %>%
@@ -496,7 +496,7 @@ starwars %>%
   broom::tidy()
 ```
 
-Let's have a look to the fitted values and residuals:
+Let's have a look to the fitted values and residuals with the function `augment()`:
 
 ```r
 starwars %>%
@@ -554,13 +554,13 @@ starwars %>%
   geom_col()
 ```
 
-![](index_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+![](unnamed-chunk-26-1.png)<!-- -->
 
-We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. The function `fct_reorder` is another nice feature of the `forcats` package. 
+We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. Neat isn't it?! The function `fct_reorder()` is another nice feature of the `forcats` package. 
 
 ## Ordering bars within bar plots
 
-When we use `facet_wrap()` to get a barplot for each level of a factor, the reordering should apply within the levels of this factor. The `fct_reorder` call above won't work:
+When we use `facet_wrap()` to get a barplot for each level of a factor, the reordering should apply within the levels of this factor. The `fct_reorder()` call above won't work:
 
 ```r
 starwars %>%
@@ -592,19 +592,19 @@ starwars %>%
 
 ![](unnamed-chunk-28-1.png)<!-- -->
 
-## Little tricks that I often don't remember
+## Little tricks I always forget about
 
 ### Free the scales
 
-The argument `scales = "free"` is useful to remember when using `facet_wrap()`. It allows the X and Y axes to have their own scale in each panel. You can choose to have a free scale on the X axis only with `scales = "free_x"`, same thing for the Y axis with `scales = "free_y"`. 
+The argument `scales = "free"` is useful when using `facet_wrap()`. It allows the X and Y axes to have their own scale in each panel. You can choose to have a free scale on the X axis only with `scales = "free_x"`, same thing for the Y axis with `scales = "free_y"`. 
 
 ### Flip coordinates 
 
-We used to add a `coord_flip()` following `geom_col()` to improve the reading of a bar plot by having the categories on the Y axis. This is no longer useful as we may simply permute the variables in the `aes()`.
+We used to add a `coord_flip()` following `geom_col()` to improve the reading of a bar plot by having the categories on the Y axis. This extra line of code is no longer needed as we can simply permute the variables in the `aes()`.
 
-### Title too long
+### Titles too long
 
-Also, in a `facet_wrap()`, the title of each panel might be too long so that it doesn't read properly. There are two ways to fix that. Either you decrease the font size with a `theme(strip.text = element_text(size = 6))` or you truncate the title with a `mutate(text = str_trunc(text, 25)`.
+Also, in a `facet_wrap()`, the title of each panel might be too long so that it doesn't read properly. There are two ways to fix that. Either you decrease the font size with a `theme(strip.text = element_text(size = 6))` or you truncate the title with a `mutate(tr_title_text = str_trunc(title_text, 25)`.
 
 ### Log scale
 
@@ -612,33 +612,34 @@ It often makes sense to plot your data using log scales. It is very easy to do i
 
 ### Axes format
 
-To improve the reading of your figure, it might be useful to represent the unit of an axis in percentage or display figures with commas. The `scales` package is what you need. For example, pipe a `scale_y_continuous(labels = scales::percent)` to have your Y axis in percentages, or 
-`scale_x_continuous(labels = scales::comma)` to add commas in the figures of your X axis. 
+To improve the reading of your figure, it might be useful to represent the unit of an axis in percentage or display numbers with commas. The `scales` package is what you need. For example, pipe a `scale_y_continuous(labels = scales::percent)` to have your Y axis in percentages, or 
+`scale_x_continuous(labels = scales::comma)` to add commas to the numbers of your X axis. 
 
 ### Legend of a map
 
-To draw maps, Dave Robinson uses the `sf` package. I wrote an [introduction to GIS and mapping in `R` using the `sf` package](https://github.com/oliviergimenez/intro_spatialR#introduction-to-gis-and-mapping-in-r-using-the-sf-package){:target="_blank" rel="noopener"} in case you're interested in. Check out the [official site](https://r-spatial.github.io/sf/){:target="_blank" rel="noopener"}.
+To draw maps, Dave Robinson uses the `sf` package. Check out the [official site](https://r-spatial.github.io/sf/){:target="_blank" rel="noopener"}. In case you're interested in, I wrote an [introduction to GIS and mapping in `R` using the `sf` package](https://github.com/oliviergimenez/intro_spatialR#introduction-to-gis-and-mapping-in-r-using-the-sf-package){:target="_blank" rel="noopener"}. 
 
 ![](sf.png)
 
-When I use maps, I always forget how to tune the legend. The `scale_fill_gradient2()` function is great in that it allows you defining colors for low and high ends of the gradient (e.g. `low = "brown",
-high = "darkgreen"`), and the midpoint of the diverging scale (e.g. `midpoint = .1`).
+When I use maps, I always forget how to tune the legend. The `scale_fill_gradient2()` function is great in that it allows defining colors for low and high ends of the gradient (e.g. `low = "brown", high = "darkgreen"`), and the midpoint of the diverging scale (e.g. `midpoint = .1`).
 
 # Stuff I need to learn
 
+David Robinson uses a bunch of tools that he has perfectly internalised so that he doesn't have to go back and forth between `RStudio` and the internet to find how to wrangle this or plot that. I am faaaaaaaaaaar from having his level of expertise. I have identified a few things I need to learn to improve myself. 
+
 ## Regular expressions
 
-I find them boring but regular expressions for describing patterns in strings are very useful when you have to remove characters (`str_remove()`) or separate rows (`separate_rows()`). Good resources are this [book chapter dedicated to strings](https://r4ds.had.co.nz/strings.html){:target="_blank" rel="noopener"} and the [vignette of the `stringr` package](https://stringr.tidyverse.org/articles/regular-expressions.html){:target="_blank" rel="noopener"}. 
+I find them boring but regular expressions for describing patterns in strings are very useful when you have to filter rows based on some patterns (`str_detect()`), remove characters (`str_remove()`) or separate rows (`separate_rows()`). Good resources are this [book chapter dedicated to strings](https://r4ds.had.co.nz/strings.html){:target="_blank" rel="noopener"} and the [vignette of the `stringr` package](https://stringr.tidyverse.org/articles/regular-expressions.html){:target="_blank" rel="noopener"}. 
 
 ## Web scraping
 
-When you analyse data, sometimes you need some extra information that can be extracted from the internet. The `rvest` package helps you scrape information from web pages. The [official site](https://rvest.tidyverse.org/){:target="_blank" rel="noopener"} is a good starting point I think.
+When you analyse data, sometimes you need some extra information that can be extracted from the internet. The `rvest` package helps you scrape information from web pages. The [official site](https://rvest.tidyverse.org/){:target="_blank" rel="noopener"} is a good starting point.
 
 ## Animation
 
 ![](gganimate_fireworks.PNG)
 
-It is relatively easy to animate a plot (whatever you have made: boxplots, scatter plots, maps, etc) you have made with `ggplot2` with the `gganimate` package. Check out the [official site](https://gganimate.com/){:target="_blank" rel="noopener"}.
+It is relatively easy to animate a plot (whatever you have made: boxplots, scatter plots, maps, etc) using the `gganimate` package. Check out the [official site](https://gganimate.com/){:target="_blank" rel="noopener"}.
 
 ## Networks
 

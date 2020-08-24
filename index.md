@@ -1,6 +1,6 @@
 # Motivation
 
-Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations. Hopefully, these notes will be useful to others.
+Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations in the `Tidyverse` framework. Hopefully, these notes will be useful to others. In case it is useful, I wrote [a quick and dirty introduction to the `Tidyverse`](https://github.com/oliviergimenez/intro_tidyverse#introduction-to-the-tidyverse){:target="_blank" rel="noopener"} some time ago.    
 
 It took me some time to fully transition from base `R` to the `Tidyverse`. I really clicked when I started watching screencasts by [David Robinson](http://varianceexplained.org/){:target="_blank" rel="noopener"} on his [Youtube channel](https://www.youtube.com/user/safe4democracy/featured){:target="_blank" rel="noopener"}. 
 
@@ -529,7 +529,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-25-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
 
 with:
 
@@ -542,7 +542,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-26-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. The function `fct_reorder` is another nice feature of the `forcats` package. 
 
@@ -561,7 +561,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-27-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
 There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
 
@@ -578,7 +578,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-28-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 ## Little tricks that I often don't remember
 
@@ -603,69 +603,31 @@ It often makes sense to plot your data using log scales. It is very easy to do i
 To improve the reading of your figure, it might be useful to represent the unit of an axis in percentage or display figures with commas. The `scales` package is what you need. For example, pipe a `scale_y_continuous(labels = scales::percent)` to have your Y axis in percentages, or 
 `scale_x_continuous(labels = scales::comma)` to add commas in the figures of your X axis. 
 
+### Legend of a map
 
-<!-- learn regex to be used w/ str_remove etc --> <!--   separate_rows(role, sep = ";\\s+") %>% -->
+To draw maps, Dave Robinson uses the `sf` package. I wrote an [introduction to GIS and mapping in `R` using the `sf` package](https://github.com/oliviergimenez/intro_spatialR#introduction-to-gis-and-mapping-in-r-using-the-sf-package){:target="_blank" rel="noopener"} in case you're interested in. Check out the [official site](https://r-spatial.github.io/sf/){:target="_blank" rel="noopener"}.
 
-<!-- big fan of gganimate, rvest, gggraph (library(ggraph), library(igraph)). Aime bien aussi packages countrycode et WDI. Et glmnet aussi.  --> <!-- rvest avec sa petite app pour recuperer html depuis wikipedia entre autres -->
+When I use maps, I always forget how to tune the legend. The `scale_fill_gradient2()` function is great in that it allows you defining colors for low and high ends of the gradient (e.g. `low = "brown",
+high = "darkgreen"`), and the midpoint of the diverging scale (e.g. `midpoint = .1`).
 
+# Stuff I need to learn
 
-<!-- ggmap --> <!-- them_map -->
+## Regular expressions
 
-<!-- replace gather and spread by pivot_longer et pivot_wider -->
+I find them boring but regular expressions for describing patterns in strings are very useful when you have to remove characters (`str_remove()`) or separate rows (`separate_rows()`). Good resources are this [book chapter dedicated to strings](https://r4ds.had.co.nz/strings.html){:target="_blank" rel="noopener"} and the [vignette of the `stringr` package](https://stringr.tidyverse.org/articles/regular-expressions.html){:target="_blank" rel="noopener"}. 
 
-<!-- always forget about the midpoint -->
-<!-- ggplot(joined_trees, aes(fill = percent_maple)) + -->
-<!--   geom_sf() + -->
-<!--   scale_fill_gradient2(low = "brown", -->
-<!--                        high = "darkgreen", -->
-<!--                        midpoint = .1, -->
-<!--                        labels = scales::percent) + -->
-<!--   theme_void() + -->
-<!--   coord_sf(datum = NA) + -->
-<!--   labs(fill = "% trees that are maple", -->
-<!--        title = "Where are the maple trees in NYC?", -->
-<!--        subtitle = "Based on a 2015 survey of 600,000 trees") -->
+## Web scraping
 
+When you analyse data, sometimes you need some extra information that can be extracted from the internet. The `rvest` package helps you scrape information from web pages. The [official site](https://rvest.tidyverse.org/){:target="_blank" rel="noopener"} is a good starting point I think.
 
-<!-- loliplot -->
+## Animation
 
-<!-- costume_ratios %>% -->
-<!--   mutate(superhero = fct_reorder(superhero, costume_ratio)) %>% -->
-<!--   ggplot(aes(costume_ratio, y = superhero)) + -->
-<!--   geom_errorbarh(aes(xmin = 1, xmax = costume_ratio), height = 0) + -->
-<!--   geom_point(aes(size = speech_total, color = costume_ratio > 1)) + -->
-<!--   scale_x_log10() + -->
-<!--   scale_color_discrete(guide = FALSE) + -->
-<!--   labs(size ="# of lines", -->
-<!--        x = "Lines in costume / lines out of costume", -->
-<!--        y = "", -->
-<!--        title = "Which X-Men tend to speak in costume/out of costume?") -->
+It is relatively easy to animate a plot (whatever you have made: boxplots, scatter plots, maps, etc) you have made with `ggplot2` with the `gganimate` package. Check out the [official site](https://gganimate.com/){:target="_blank" rel="noopener"}.
 
+## Networks
 
+Another great package by [Thomas Lin Pedersen](https://www.data-imaginist.com/){:target="_blank" rel="noopener"} is `ggraph` to visualise data that are structured in relations like networks and trees. Check out the [official site](https://ggraph.data-imaginist.com/){:target="_blank" rel="noopener"}.
 
-<!-- janitor::clean_names() -->
-<!-- lubridate::year() -->
+## Dimensional modeling
 
-<!-- ## barre d'erreur -->
-
-<!-- geom_errorbarh() -->
-<!-- geom_errorbar -->
-
-<!-- n.distinct() -->
-<!-- distinct -->
-
-<!-- ## PCA too  -->
-
-<!-- perso i prefer going for FactoMineR and factoextra -->
-
-
-<!-- ## tidymetrics -->
-
-
-<!-- # devtools::install_github("ramnathv/tidymetrics") -->
-<!-- library(tidymetrics) -->
-<!--   cross_by_dimensions(material, material_type) %>% -->
-<!--   cross_by_periods(c("month", "quarter", "year")) %>% -->
-
-
-
+The `cross by` functions look terrific to aggregate data by calendar dates. I need to understand how to work with them. Check out the [official site](https://github.com/datacamp/tidymetrics){:target="_blank" rel="noopener"} and [this talk](https://github.com/klmedeiros/dc-r-conf-2019){:target="_blank" rel="noopener"} by [Kaelen Medeiros](http://klmedeiros.com/){:target="_blank" rel="noopener"}.

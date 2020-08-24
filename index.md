@@ -14,7 +14,7 @@ Let's get to it. First data wrangling, second data visualisation. I will use the
 
 # Setting the scene
 
-![](tidyverse_celestial.png)
+![](tidyverse_celestial.jpg)
 
 Load the tidyverse suite of packages:
 
@@ -541,7 +541,7 @@ starwars %>%
   geom_col()
 ```
 
-![](index_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+![](unnamed-chunk-25-1.png)<!-- -->
 
 with:
 
@@ -573,7 +573,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
+![](unnamed-chunk-27-1.png)<!-- -->
 
 There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
 
@@ -590,7 +590,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](index_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+![](unnamed-chunk-28-1.png)<!-- -->
 
 ## Little tricks that I often don't remember
 

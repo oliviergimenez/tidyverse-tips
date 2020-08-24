@@ -1,4 +1,4 @@
-## Motivation
+# Motivation
 
 Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations. Hopefully, these notes will be useful to others.
 
@@ -21,7 +21,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.3.0 ──
+## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 ```
 
 ```
@@ -32,7 +32,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 ```
@@ -234,19 +234,19 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 87 x 5
-##    name               gender    species  mass     n
-##    <chr>              <chr>     <chr>   <dbl> <dbl>
-##  1 Luke Skywalker     masculine Human      77 1821.
-##  2 C-3PO              masculine Droid      75  279 
-##  3 R2-D2              masculine Droid      32  279 
-##  4 Darth Vader        masculine Human     136 1821.
-##  5 Leia Organa        feminine  Human      49 1821.
-##  6 Owen Lars          masculine Human     120 1821.
-##  7 Beru Whitesun lars feminine  Human      75 1821.
-##  8 R5-D4              masculine Droid      32  279 
-##  9 Biggs Darklighter  masculine Human      84 1821.
-## 10 Obi-Wan Kenobi     masculine Human      77 1821.
+## # A tibble: 87 x 6
+##    name               gender    species  mass height     n
+##    <chr>              <chr>     <chr>   <dbl>  <int> <dbl>
+##  1 Luke Skywalker     masculine Human      77    172 1821.
+##  2 C-3PO              masculine Droid      75    167  279 
+##  3 R2-D2              masculine Droid      32     96  279 
+##  4 Darth Vader        masculine Human     136    202 1821.
+##  5 Leia Organa        feminine  Human      49    150 1821.
+##  6 Owen Lars          masculine Human     120    178 1821.
+##  7 Beru Whitesun lars feminine  Human      75    165 1821.
+##  8 R5-D4              masculine Droid      32     97  279 
+##  9 Biggs Darklighter  masculine Human      84    183 1821.
+## 10 Obi-Wan Kenobi     masculine Human      77    182 1821.
 ## # … with 77 more rows
 ```
 
@@ -529,7 +529,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-25-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
 
 with:
 
@@ -542,7 +542,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-26-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. The function `fct_reorder` is another nice feature of the `forcats` package. 
 
@@ -561,7 +561,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-27-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
 There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
 
@@ -578,7 +578,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-28-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 ## Little tricks that I often don't remember
 

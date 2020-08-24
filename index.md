@@ -529,7 +529,7 @@ starwars %>%
   geom_col()
 ```
 
-![](index_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+![](unnamed-chunk-25-1.png)<!-- -->
 
 with:
 
@@ -542,7 +542,7 @@ starwars %>%
   geom_col()
 ```
 
-![](index_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+![](unnamed-chunk-26-1.png)<!-- -->
 
 We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. The function `fct_reorder` is another nice feature of the `forcats` package. 
 
@@ -561,7 +561,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
+![](unnamed-chunk-27-1.png)<!-- -->
 
 There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
 
@@ -578,7 +578,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](index_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
+![](unnamed-chunk-28-1.png)<!-- -->
 
 ## Little tricks that I often don't remember
 

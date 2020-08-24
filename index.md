@@ -304,7 +304,28 @@ starwars %>%
 ## 4 Droid   masculine     5
 ```
 
+### Computations across columns
 
+There is a new function in `dplyr` which allows applying functions to columns of a dataset. In the example below, I compute the mean and standard deviation (storing them in a list) across all columns with numeric format (`where(is.numeric)`), while taking care of the missing values (`na.rm = TRUE`):
+
+```r
+starwars %>%
+  summarize(across(where(is.numeric), 
+                   list(mean = ~mean(.x, na.rm = TRUE), 
+                        sd = ~sd(.x, na.rm = TRUE))))
+```
+
+```
+## # A tibble: 1 x 4
+##   mass_mean mass_sd height_mean height_sd
+##       <dbl>   <dbl>       <dbl>     <dbl>
+## 1      97.3    169.        174.      34.8
+```
+Just use `list(mean = mean, sd = sd)` if no missing values. Also check out `across(starts_with())` and `across(everywhere())` for even more flexibility. 
+
+### The decade trick
+
+Probably the best of his tricks, Dave Robinson often uses the integer division `%/%` to count things at coarse levels. For example, here how you would count the number of character in classes of height of width 10 centimeters. 
 
 ```r
 starwars %>%
@@ -335,9 +356,9 @@ starwars %>%
 ## 18             NA     6
 ```
 
-Also works for years (think of decades for example). 
+This trick also works for years `count(year = 10 * (year %/% 10))`, think of decades for example, hence the 'decade trick'. 
 
-You may change the name of the n column
+You may tuned a bit the output by changing the name of the `n` column:
 
 ```r
 starwars %>%
@@ -369,11 +390,14 @@ starwars %>%
 ## 18             NA          6
 ```
 
+### Lumping levels together
+
+It has always been a nightmare to deal with factors in `R`. The package `forcats` is a game changer. For example, the function `fct_lump` is useful to manipulate factors with many levels. You just lump levels together by preserving the `n` most common values, the other levels are lumped in a new `Other` level:
 
 ```r
 starwars %>%
   filter(!is.na(species)) %>%
-  count(species = fct_lump(species, 3))
+  count(species = fct_lump(f = species, n = 3))
 ```
 
 ```
@@ -386,24 +410,93 @@ starwars %>%
 ## 4 Other      39
 ```
 
-Pipe a `filter(species != 'Other')` if you'd like to get rid of the `Other` category created by `fct_lump`. 
+If you'd like to get rid of `Other`, just pipe a `filter(species != 'Other')`. 
+
+## Pipe a (G)LM
+
+Statistical analyses can easily be piped in your tidyverse workflow. You will find two simple examples below. Check out the [`broom` package](https://cran.r-project.org/web/packages/broom/vignettes/broom.html){:target="_blank" rel="noopener"} which cleans up the messy output of built-in `R` functions like `lm` or `glm`. Also, recommended is [`tidymodels`](https://www.tidymodels.org/){:target="_blank" rel="noopener"} a collection of packages for doing statistical analyses in the machine learning spirit. If you want to learn `tidymodels` by examples, I strongly recommend [Julia Silge's screencasts](https://juliasilge.com/category/tidymodels/){:target="_blank" rel="noopener"} and her [supervised machine learning course](https://juliasilge.com/blog/tidymodels-ml-course/){:target="_blank" rel="noopener"}. 
+
+### Simple linear regression
 
 
 ```r
 starwars %>%
-  summarize(across(where(is.numeric), 
-                   list(mean = ~mean(.x, na.rm = TRUE), 
-                        sd = ~sd(.x, na.rm = TRUE))))
+  lm(mass ~ height, data = .) %>%
+  anova()
 ```
 
 ```
-## # A tibble: 1 x 4
-##   mass_mean mass_sd height_mean height_sd
-##       <dbl>   <dbl>       <dbl>     <dbl>
-## 1      97.3    169.        174.      34.8
+## Analysis of Variance Table
+## 
+## Response: mass
+##           Df  Sum Sq Mean Sq F value Pr(>F)
+## height     1   29854   29854  1.0404  0.312
+## Residuals 57 1635658   28696
 ```
 
-`list(mean = mean, sd = sd)` if no missing values. Also check out `across(starts_with())` and `across(everywhere())`
+Here is the tidy version of it:
+
+```r
+starwars %>%
+  lm(mass ~ height, data = .) %>%
+  broom::tidy()
+```
+
+```
+## # A tibble: 2 x 5
+##   term        estimate std.error statistic p.value
+##   <chr>          <dbl>     <dbl>     <dbl>   <dbl>
+## 1 (Intercept)  -13.8     111.       -0.124   0.902
+## 2 height         0.639     0.626     1.02    0.312
+```
+
+Get several summary statistics, including the $R^2$ and the AIC:
+
+```r
+starwars %>%
+  lm(mass ~ height, data = .) %>%
+  broom::glance()
+```
+
+```
+## # A tibble: 1 x 12
+##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+##       <dbl>         <dbl> <dbl>     <dbl>   <dbl> <dbl>  <dbl> <dbl> <dbl>
+## 1    0.0179      0.000696  169.      1.04   0.312     1  -386.  777.  783.
+## # … with 3 more variables: deviance <dbl>, df.residual <int>, nobs <int>
+```
+
+### Logistic regression
+
+
+```r
+starwars %>%
+  mutate(human = if_else(species == 'Human', 1, 0)) %>%
+  glm(human ~ height, data = ., family = "binomial") %>%
+  summary()
+```
+
+Here is the tidy version of it:
+
+```r
+starwars %>%
+  mutate(human = if_else(species == 'Human', 1, 0)) %>%
+  glm(human ~ height, data = ., family = "binomial") %>%
+  broom::tidy()
+```
+
+Let's have a look to the fitted values and residuals:
+
+```r
+starwars %>%
+  mutate(human = if_else(species == 'Human', 1, 0)) %>%
+  glm(human ~ height, data = ., family = "binomial") %>%
+  broom::augment()
+```
+
+### To go further
+
+## Miscealleanous
 
 
 ```r
@@ -423,32 +516,6 @@ parse_number("1,234,567.78")
 ## [1] 1234568
 ```
 
-## Pipe a (G)LM
-
-### Logistic regression
-
-
-```r
-by_hectare %>%
-  mutate(n_gray = round(pct_gray * n)) %>%
-  glm(cbind(n_gray, n - n_gray) ~ lat, data = ., family = "binomial") %>%
-  summary()
-```
-
-### Simple linear regression
-
-
-```r
-horror_movies %>%
-  filter(!is.na(movie_rating)) %>%
-  mutate(movie_rating = fct_lump(movie_rating, 5)) %>%
-  lm(review_rating ~ movie_rating, data = .) %>%
-  anova()
-```
-
-### To go further
-
-Placer broom et tidymodels. 
 
 
 

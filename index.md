@@ -10,9 +10,11 @@ David Robinson shares [the #RStats code](https://github.com/dgrtwo/data-screenca
 
 Check out David Robinson's talk [Ten Tremendous Tricks for Tidyverse](https://www.youtube.com/watch?v=NDHSBUN_rVU){:target="_blank" rel="noopener"}. You might also be interested in Emily Robinson's talk [The Lesser Known Stars of the Tidyverse](https://www.youtube.com/watch?v=ax4LXQ5t38k){:target="_blank" rel="noopener"}.
 
-Let's get to it. First data wrangling, second data visualisation. 
+Let's get to it. First data wrangling, second data visualisation. I will use the awesome illustrations by [Allison Horst](https://www.allisonhorst.com/){:target="_blank" rel="noopener"} throughout, check out her work [here](https://github.com/allisonhorst/stats-illustrations){:target="_blank" rel="noopener"}. 
 
 # Setting the scene
+
+![](tidyverse_celestial.png)
 
 Load the tidyverse suite of packages:
 
@@ -153,6 +155,8 @@ starwars %>%
 ## 1 masculine    66
 ## 2 feminine     17
 ```
+
+![](dplyr_filter.jpg)
 
 Count along more than one variable:
 
@@ -307,6 +311,8 @@ starwars %>%
 
 ### Computations across columns
 
+![](dplyr_across.png)
+
 There is a new function in `dplyr` which allows applying functions to columns of a dataset. In the example below, I compute the mean and standard deviation (storing them in a list) across all columns with numeric format (`where(is.numeric)`), while taking care of the missing values (`na.rm = TRUE`):
 
 ```r
@@ -415,7 +421,11 @@ If you'd like to get rid of `Other`, just pipe a `filter(species != 'Other')`.
 
 ## Pipe a (G)LM
 
-Statistical analyses can easily be piped in your tidyverse workflow. You will find two simple examples below. Check out the [`broom` package](https://cran.r-project.org/web/packages/broom/vignettes/broom.html){:target="_blank" rel="noopener"} which cleans up the messy output of built-in `R` functions like `lm` or `glm`. Also, recommended is [`tidymodels`](https://www.tidymodels.org/){:target="_blank" rel="noopener"} a collection of packages for doing statistical analyses in the machine learning spirit. If you want to learn `tidymodels` by examples, I strongly recommend [Julia Silge's screencasts](https://juliasilge.com/category/tidymodels/){:target="_blank" rel="noopener"} and her [supervised machine learning course](https://juliasilge.com/blog/tidymodels-ml-course/){:target="_blank" rel="noopener"}. 
+Statistical analyses can easily be piped in your tidyverse workflow. You will find two simple examples below. Check out the [`broom` package](https://cran.r-project.org/web/packages/broom/vignettes/broom.html){:target="_blank" rel="noopener"} which cleans up the messy output of built-in `R` functions like `lm` or `glm`. 
+
+![](broom_package.png)
+
+Also, recommended is [`tidymodels`](https://www.tidymodels.org/){:target="_blank" rel="noopener"} a collection of packages for doing statistical analyses in the machine learning spirit. If you want to learn `tidymodels` by examples, I strongly recommend [Julia Silge's screencasts](https://juliasilge.com/category/tidymodels/){:target="_blank" rel="noopener"} and her [supervised machine learning course](https://juliasilge.com/blog/tidymodels-ml-course/){:target="_blank" rel="noopener"}. 
 
 ### Simple linear regression
 
@@ -497,6 +507,8 @@ starwars %>%
 
 ## Miscealleanous
 
+![](parse_number.png)
+
 
 ```r
 ?parse_number
@@ -529,7 +541,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-25-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
 
 with:
 
@@ -542,7 +554,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-26-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. The function `fct_reorder` is another nice feature of the `forcats` package. 
 
@@ -561,7 +573,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-27-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
 There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
 
@@ -578,7 +590,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-28-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 ## Little tricks that I often don't remember
 
@@ -607,6 +619,8 @@ To improve the reading of your figure, it might be useful to represent the unit 
 
 To draw maps, Dave Robinson uses the `sf` package. I wrote an [introduction to GIS and mapping in `R` using the `sf` package](https://github.com/oliviergimenez/intro_spatialR#introduction-to-gis-and-mapping-in-r-using-the-sf-package){:target="_blank" rel="noopener"} in case you're interested in. Check out the [official site](https://r-spatial.github.io/sf/){:target="_blank" rel="noopener"}.
 
+![](sf.png)
+
 When I use maps, I always forget how to tune the legend. The `scale_fill_gradient2()` function is great in that it allows you defining colors for low and high ends of the gradient (e.g. `low = "brown",
 high = "darkgreen"`), and the midpoint of the diverging scale (e.g. `midpoint = .1`).
 
@@ -621,6 +635,8 @@ I find them boring but regular expressions for describing patterns in strings ar
 When you analyse data, sometimes you need some extra information that can be extracted from the internet. The `rvest` package helps you scrape information from web pages. The [official site](https://rvest.tidyverse.org/){:target="_blank" rel="noopener"} is a good starting point I think.
 
 ## Animation
+
+![](gganimate_fireworks.PNG)
 
 It is relatively easy to animate a plot (whatever you have made: boxplots, scatter plots, maps, etc) you have made with `ggplot2` with the `gganimate` package. Check out the [official site](https://gganimate.com/){:target="_blank" rel="noopener"}.
 

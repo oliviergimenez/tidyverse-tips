@@ -487,6 +487,30 @@ starwars %>%
   summary()
 ```
 
+```
+## 
+## Call:
+## glm(formula = human ~ height, family = "binomial", data = .)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+## -1.134  -1.025  -0.929   1.345   1.397  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(>|z|)
+## (Intercept) -1.025166   1.198297  -0.856    0.392
+## height       0.003489   0.006715   0.520    0.603
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 104.83  on 77  degrees of freedom
+## Residual deviance: 104.55  on 76  degrees of freedom
+##   (9 observations deleted due to missingness)
+## AIC: 108.55
+## 
+## Number of Fisher Scoring iterations: 4
+```
+
 Here is the tidy version of it:
 
 ```r
@@ -496,6 +520,14 @@ starwars %>%
   broom::tidy()
 ```
 
+```
+## # A tibble: 2 x 5
+##   term        estimate std.error statistic p.value
+##   <chr>          <dbl>     <dbl>     <dbl>   <dbl>
+## 1 (Intercept) -1.03      1.20       -0.856   0.392
+## 2 height       0.00349   0.00672     0.520   0.603
+```
+
 Let's have a look to the fitted values and residuals with the function `augment()`:
 
 ```r
@@ -503,6 +535,23 @@ starwars %>%
   mutate(human = if_else(species == 'Human', 1, 0)) %>%
   glm(human ~ height, data = ., family = "binomial") %>%
   broom::augment()
+```
+
+```
+## # A tibble: 78 x 9
+##    .rownames human height .fitted .resid .std.resid   .hat .sigma .cooksd
+##    <chr>     <dbl>  <int>   <dbl>  <dbl>      <dbl>  <dbl>  <dbl>   <dbl>
+##  1 1             1    172  -0.425  1.36       1.37  0.0129   1.17 0.0102 
+##  2 2             0    167  -0.443 -0.996     -1.00  0.0135   1.17 0.00445
+##  3 3             0     96  -0.690 -0.902     -0.937 0.0747   1.18 0.0219 
+##  4 4             1    202  -0.320  1.32       1.33  0.0211   1.17 0.0151 
+##  5 5             1    150  -0.502  1.40       1.41  0.0193   1.17 0.0166 
+##  6 6             1    178  -0.404  1.35       1.36  0.0130   1.17 0.00999
+##  7 7             1    165  -0.450  1.37       1.38  0.0139   1.17 0.0112 
+##  8 8             0     97  -0.687 -0.903     -0.938 0.0732   1.18 0.0214 
+##  9 9             1    183  -0.387  1.35       1.35  0.0136   1.17 0.0103 
+## 10 10            1    182  -0.390  1.35       1.36  0.0135   1.17 0.0102 
+## # … with 68 more rows
 ```
 
 ## Miscealleanous

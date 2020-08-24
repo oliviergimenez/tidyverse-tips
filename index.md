@@ -10,9 +10,9 @@ David Robinson shares [the #RStats code](https://github.com/dgrtwo/data-screenca
 
 Check out David Robinson's talk [Ten Tremendous Tricks for Tidyverse](https://www.youtube.com/watch?v=NDHSBUN_rVU){:target="_blank" rel="noopener"}. You might also be interested in Emily Robinson's talk [The Lesser Known Stars of the Tidyverse](https://www.youtube.com/watch?v=ax4LXQ5t38k){:target="_blank" rel="noopener"}.
 
-Let's get to it. 
+Let's get to it. First data wrangling, second data visualisation. 
 
-## Setting the scene
+# Setting the scene
 
 Load the tidyverse suite of packages:
 
@@ -51,6 +51,8 @@ For illustration, I will use the `starwars` dataset that comes with the `tidyver
 data("starwars")
 starwars_raw <- starwars
 ```
+
+# Data wrangling
 
 ## Inspect the data
 
@@ -93,7 +95,6 @@ We are gonna use only a few columns of the original dataset:
 starwars <- starwars_raw %>%
   select(name, gender, species, mass, height)
 ```
-
 
 ## Count, count, count
 
@@ -494,8 +495,6 @@ starwars %>%
   broom::augment()
 ```
 
-### To go further
-
 ## Miscealleanous
 
 
@@ -516,138 +515,116 @@ parse_number("1,234,567.78")
 ## [1] 1234568
 ```
 
+# Data visualisation
+
+## Ordering bars in a bar plot
+
+Compare:
+
+```r
+starwars %>%
+  filter(!is.na(species)) %>%
+  count(species = fct_lump(species, 3)) %>%
+  ggplot(aes(x = n, y = species)) + 
+  geom_col()
+```
+
+![](unnamed-chunk-25-1.png)<!-- -->
+
+with:
+
+```r
+starwars %>%
+  filter(!is.na(species)) %>%
+  count(species = fct_lump(species, 3)) %>%
+  mutate(species = fct_reorder(species, n)) %>%
+  ggplot(aes(x = n, y = species)) + 
+  geom_col()
+```
+
+![](unnamed-chunk-26-1.png)<!-- -->
+
+We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. The function `fct_reorder` is another nice feature of the `forcats` package. 
+
+## Ordering bars within bar plots
+
+When we use `facet_wrap()` to get a barplot for each level of a factor, the reordering should apply within the levels of this factor. The `fct_reorder` call above won't work:
+
+```r
+starwars %>%
+  filter(!is.na(species)) %>%
+  count(species = fct_lump(species, 5),
+        gender) %>%
+  mutate(species = fct_reorder(species, n)) %>%
+  ggplot(aes(x = n, y = species)) + 
+  geom_col() +
+  facet_wrap(vars(gender))
+```
+
+![](unnamed-chunk-27-1.png)<!-- -->
+
+There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
+
+```r
+library(tidytext)
+starwars %>%
+  filter(!is.na(species)) %>%
+  count(species = fct_lump(species, 5),
+        gender) %>%
+  mutate(species = reorder_within(species, n, gender)) %>%
+  ggplot(aes(x = n, y = species)) + 
+  geom_col() +
+  scale_y_reordered() + 
+  facet_wrap(vars(gender))
+```
+
+![](unnamed-chunk-28-1.png)<!-- -->
+
+## Little tricks that I often don't remember
+
+### Free the scales
+
+The argument `scales = "free"` is useful to remember when using `facet_wrap()`. It allows the X and Y axes to have their own scale in each panel. You can choose to have a free scale on the X axis only with `scales = "free_x"`, same thing for the Y axis with `scales = "free_y"`. 
+
+### Flip coordinates 
+
+We used to add a `coord_flip()` following `geom_col()` to improve the reading of a bar plot by having the categories on the Y axis. This is no longer useful as we may simply permute the variables in the `aes()`.
+
+### Title too long
+
+Also, in a `facet_wrap()`, the title of each panel might be too long so that it doesn't read properly. There are two ways to fix that. Either you decrease the font size with a `theme(strip.text = element_text(size = 6))` or you truncate the title with a `mutate(text = str_trunc(text, 25)`.
+
+### Log scale
+
+It often makes sense to plot your data using log scales. It is very easy to do in `ggplot2` by piping a `scale_x_log10()` or a `scale_y_log10()`. 
+
+### Axes format
+
+To improve the reading of your figure, it might be useful to represent the unit of an axis in percentage or display figures with commas. The `scales` package is what you need. For example, pipe a `scale_y_continuous(labels = scales::percent)` to have your Y axis in percentages, or 
+`scale_x_continuous(labels = scales::comma)` to add commas in the figures of your X axis. 
 
 
+<!-- learn regex to be used w/ str_remove etc --> <!--   separate_rows(role, sep = ";\\s+") %>% -->
+
+<!-- big fan of gganimate, rvest, gggraph (library(ggraph), library(igraph)). Aime bien aussi packages countrycode et WDI. Et glmnet aussi.  --> <!-- rvest avec sa petite app pour recuperer html depuis wikipedia entre autres -->
 
 
-<!-- gdpr_violations %>% -->
-<!--   count(country = fct_lump(country, 8, w = price), -->
-<!--         sort = TRUE, wt = price, name = "total_price") %>% -->
-<!--   mutate(country = fct_reorder(country, total_price)) %>% -->
-<!--   ggplot(aes(total_price, country)) + -->
-<!--   geom_col() + -->
-<!--   scale_x_continuous(labels = dollar_format()) -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- animal_outcomes %>% -->
-<!--   complete(animal_type, outcome, year, fill = list(total = 0)) %>% -->
-<!--   mutate(outcome = fct_reorder(outcome, total, sum), -->
-<!--          animal_type = fct_reorder(animal_type, -total, sum)) %>% -->
-<!--   ggplot(aes(year, total, color = outcome)) + -->
-<!--   geom_line() + -->
-<!--   facet_wrap(~ animal_type, scales = "free_y") + -->
-<!--   scale_y_continuous(labels = comma) + -->
-<!--   labs(x = "Year", -->
-<!--        y = "# of animals with this outcome", -->
-<!--        color = "Outcome") -->
-
-
-
-
-<!-- milk_products_tidied %>% -->
-<!--   group_by(product = fct_lump(product, 6, w = lbs_per_person), -->
-<!--            year) %>% -->
-<!--   summarize(lbs_per_person = sum(lbs_per_person)) %>% -->
-<!--   ggplot(aes(year, lbs_per_person, color = product)) + -->
-<!--   geom_line() -->
-
-
-<!-- filter != other -->
-
-<!-- fct_reorder_within dans tidytext -->
-
-<!-- by_continent_threat %>% -->
-<!--   mutate(threat_type = reorder_within(threat_type, n, continent)) %>% -->
-<!--   ggplot(aes(n, threat_type)) + -->
-<!--   geom_col() + -->
-<!--   scale_y_reordered() + -->
-<!--   facet_wrap(~ continent, scales = "free") + -->
-<!--   labs(x = "# of plants facing this threat", -->
-<!--        y = "", -->
-<!--        fill = "Continent", -->
-<!--        title = "What are the most common threats to plants by continent?") -->
-
-
-
-<!-- The decade trick is one of his bests. -->
-
-<!-- fct_reorder and coord_flip -->
-<!-- by_minor_category_2016 %>% -->
-<!--   mutate(minor_category = fct_reorder(minor_category, wage_percent_of_male)) %>% -->
-<!--   ggplot(aes(minor_category, wage_percent_of_male, fill = major_category)) + -->
-<!--   geom_col() + -->
-<!--   coord_flip() -->
-
-<!-- milk_products_tidied %>% -->
-<!--   filter(year == max(year)) %>% -->
-<!--   mutate(product = fct_reorder(product, lbs_per_person, sum)) %>% -->
-<!--   ggplot(aes(product, lbs_per_person, fill = category)) + -->
-<!--   geom_col() + -->
-<!--   coord_flip() + -->
-<!--   labs(x = "", -->
-<!--        y = "Pounds consumed per US person in 2017") -->
-
-<!-- coffee_lumped %>% -->
-<!--   mutate(variety = fct_reorder(variety, total_cup_points)) %>% -->
-<!--   ggplot(aes(total_cup_points, variety)) + -->
-<!--   geom_boxplot() -->
-
-<!-- mutate(word = reorder(word, n)) %>% -->
-
-
-
-<!-- scale_x_log10 -->
-
-<!-- wine_ratings %>% -->
-<!--   ggplot(aes(price)) + -->
-<!--   geom_histogram() + -->
-<!--   scale_x_log10() -->
-
-
-<!-- rvest avec sa petite app pour recuperer html depuis wikipedia entre autres -->
-<!-- learn regex to be used w/ str_remove etc -->
-<!-- big fan of gganimate, rvest, gggraph (library(ggraph), library(igraph)), broom as well. Aime bien aussi packages countrycode et WDI. Et glmnet aussi.  -->
-
-
-
-
-<!-- mutate(type = str_remove(type, "\\d+")) -->
-
-<!-- ggmap -->
-<!-- them_map -->
-
-
-
-<!-- utilisation de accross -->
-
-<!-- xmen <- tidytuesdayR::tt_load('2020-06-30') -->
-<!-- character_visualization <- xmen$character_visualization %>% -->
-<!--   separate(character, c("superhero", "secret_identity"), sep = " = ", fill = "right") -->
-<!-- by_character <- character_visualization %>% -->
-<!--   group_by(superhero) %>% -->
-<!--   summarize(across(speech:depicted, -->
-<!--                    list(total = sum, -->
-<!--                         issues = ~ sum(. > 0), -->
-<!--                         avg = ~ mean(.[depicted > 0])))) -->
-
-
+<!-- ggmap --> <!-- them_map -->
 
 <!-- replace gather and spread by pivot_longer et pivot_wider -->
 
+<!-- always forget about the midpoint -->
+<!-- ggplot(joined_trees, aes(fill = percent_maple)) + -->
+<!--   geom_sf() + -->
+<!--   scale_fill_gradient2(low = "brown", -->
+<!--                        high = "darkgreen", -->
+<!--                        midpoint = .1, -->
+<!--                        labels = scales::percent) + -->
+<!--   theme_void() + -->
+<!--   coord_sf(datum = NA) + -->
+<!--   labs(fill = "% trees that are maple", -->
+<!--        title = "Where are the maple trees in NYC?", -->
+<!--        subtitle = "Based on a 2015 survey of 600,000 trees") -->
 
 
 <!-- loliplot -->
@@ -666,89 +643,8 @@ parse_number("1,234,567.78")
 
 
 
-<!-- group_by fct_lump -->
-<!-- xmen$comic_bechdel %>% -->
-<!--   bind_rows(xmen$xmen_bechdel %>% mutate(writer = "Chris Claremont")) %>% -->
-<!--   filter(!is.na(pass_bechdel), -->
-<!--          !is.na(writer)) %>% -->
-<!--   group_by(writer = fct_lump(writer, 5)) %>% -->
-
-
-
-<!-- paquets de trucs sur X-axis, scales -->
-<!-- xmen$xmen_bechdel %>% -->
-<!--   filter(!is.na(pass_bechdel)) %>% -->
-<!--   group_by(issue_group = 20 * (issue %/% 20)) %>% -->
-<!--   summarize(pct_bechdel = mean(pass_bechdel == "yes"), -->
-<!--             n = n()) %>% -->
-<!--   ggplot(aes(issue_group, pct_bechdel)) + -->
-<!--   geom_line() + -->
-<!--   scale_y_continuous(labels = scales::percent) -->
-
-<!-- by_decade <- tdf_winners %>% -->
-<!--   group_by(decade = 10 * (year %/% 10)) %>% -->
-<!--   summarize(winner_age = mean(age), -->
-<!--             winner_height = mean(height, na.rm = TRUE), -->
-<!--             winner_weight = mean(weight, na.rm = TRUE), -->
-<!--             winner_margin = mean(time_margin, na.rm = TRUE), -->
-<!--             winner_speed = mean(speed, na.rm = TRUE)) -->
-
-
-
-<!-- filter les others -->
-<!-- by_issue_character %>% -->
-<!--   filter(fct_lump(superhero, 9, w = speech) != "Other") %>% -->
-<!--   mutate(superhero = fct_reorder(superhero, -speech, sum)) %>% -->
-<!--   ggplot(aes(issue_group, speech)) + -->
-<!--   geom_col() + -->
-<!--   facet_wrap(~ superhero) -->
-
-
-<!-- always forget about the midpoint -->
-
-<!-- ggplot(joined_trees, aes(fill = percent_maple)) + -->
-<!--   geom_sf() + -->
-<!--   scale_fill_gradient2(low = "brown", -->
-<!--                        high = "darkgreen", -->
-<!--                        midpoint = .1, -->
-<!--                        labels = scales::percent) + -->
-<!--   theme_void() + -->
-<!--   coord_sf(datum = NA) + -->
-<!--   labs(fill = "% trees that are maple", -->
-<!--        title = "Where are the maple trees in NYC?", -->
-<!--        subtitle = "Based on a 2015 survey of 600,000 trees") -->
-
 <!-- janitor::clean_names() -->
 <!-- lubridate::year() -->
-
-<!-- scale_y_continuous(labels = scales::percent_format()) + -->
-<!-- scale_x_continuous(labels = scales::comma()) + -->
-
-
-
-
-
-
-
-<!-- simpsons %>% -->
-
-
-<!--   separate_rows(role, sep = ";\\s+") %>% -->
-<!--   add_count(role) %>% -->
-<!--   filter(n >= 8) %>% -->
-<!--   count(season, role) %>% -->
-<!--   mutate(role = fct_reorder(role, -n, sum)) %>% -->
-<!--   ggplot(aes(season, n)) + -->
-<!--   geom_col() + -->
-<!--   facet_wrap(~ role) -->
-
-
-
-
-
-<!-- crossing function, cf riddlers -->
-
-
 
 <!-- ## barre d'erreur -->
 
@@ -757,54 +653,6 @@ parse_number("1,234,567.78")
 
 <!-- n.distinct() -->
 <!-- distinct -->
-
-<!-- nobel_winners %>% -->
-<!--   group_by(category, decade) %>% -->
-<!--   summarize(winners = n(), -->
-<!--             winners_per_year = winners / n_distinct(prize_year)) %>% -->
-<!--   ggplot(aes(decade, winners_per_year, color = category)) + -->
-<!--   geom_line() + -->
-<!--   expand_limits(y = 0) -->
-
-<!-- nobel_winners %>% -->
-<!--   distinct(full_name, prize_year, category) %>% -->
-<!--   group_by(full_name) %>% -->
-<!--   mutate(prizes = n(), -->
-<!--          distinct_prizes = n_distinct(category)) %>% -->
-<!--   arrange(desc(prizes), full_name) -->
-
-
-<!-- ## heatmap -->
-
-<!-- geom_tile -->
-
-<!-- november_2018 %>% -->
-<!-- #  mutate(arrival_station = fct_infreq(fct_lump(arrival_station, prop = .01))) %>% -->
-<!-- #  mutate(departure_station = fct_infreq(fct_lump(departure_station, prop = .01))) %>% -->
-<!--   mutate(arrival_station = fct_reorder(fct_lump(arrival_station, prop = .01), pct_late_at_departure)) %>% -->
-<!--   mutate(departure_station = fct_reorder(fct_lump(departure_station, prop = .01), pct_late_at_departure)) %>% -->
-<!--   group_by(arrival_station, departure_station) %>% -->
-<!--   summarize(pct_late_at_departure = sum(num_late_at_departure) / sum(total_num_trips)) %>% -->
-<!--   ggplot(aes(arrival_station, departure_station, fill = pct_late_at_departure)) + -->
-<!--   geom_tile() + -->
-<!--   scale_fill_gradient2(low = "blue", high = "red", midpoint = .25, labels = percent_format()) + -->
-<!--   theme(axis.text.x = element_text(angle = 90, hjust = 1)) + -->
-<!--   labs(x = "Arrival station", -->
-<!--        y = "Departure station", -->
-<!--        fill = "% late at departure", -->
-<!--        title = "Which routes have the most delayed trains in November 2018?", -->
-<!--        subtitle = "Stations with only one arriving/departing route were lumped into 'Other'") -->
-
-<!-- ## serparate rows -->
-
-<!-- ```{r eval = FALSE} -->
-<!-- horror_movies %>% -->
-<!--   separate_rows(genres, sep = "\\| ") %>% -->
-<!--   mutate(genre = fct_lump(genres, 5)) %>% -->
-<!--   ggplot(aes(genre, review_rating)) + -->
-<!--   geom_boxplot() -->
-<!-- ``` -->
-
 
 <!-- ## PCA too  -->
 
@@ -816,48 +664,8 @@ parse_number("1,234,567.78")
 
 <!-- # devtools::install_github("ramnathv/tidymetrics") -->
 <!-- library(tidymetrics) -->
-
-<!-- brewing_summarized <- brewing_materials %>% -->
-<!--   rename(material = type) %>% -->
-<!--   filter(!str_detect(material_type, "Total")) %>% -->
 <!--   cross_by_dimensions(material, material_type) %>% -->
 <!--   cross_by_periods(c("month", "quarter", "year")) %>% -->
-<!--   summarize(nb_pounds = sum(month_current)) %>% -->
-<!--   ungroup() -->
 
 
 
-<!-- ## different ways of representing a distribution -->
-
-<!-- penguins_pivoted %>% -->
-<!--   ggplot(aes(value, fill = species)) + -->
-<!--   geom_histogram(bins = 20) + -->
-<!--   facet_wrap(~ metric, scales = "free_x") -->
-
-<!-- penguins_pivoted %>% -->
-<!--   ggplot(aes(value, fill = species)) + -->
-<!--   geom_density(alpha = .5) + -->
-<!--   facet_wrap(~ metric, scales = "free") -->
-
-<!-- penguins_pivoted %>% -->
-<!--   ggplot(aes(species, value)) + -->
-<!--   geom_boxplot() + -->
-<!--   facet_wrap(~ metric, scales = "free_y") -->
-
-<!-- ## mention tidymodels, refer to screencasts by Julia Silge and website on tidymodels -->
-
-<!-- ## mention tidytext, refer to book by Robinson and Silge -->
-
-<!-- ## reduire texte dans strip apres un facet_wrap g -->
-
-<!-- + theme(strip.text = element_text(size = 6)) -->
-
-<!-- voir aussi un  -->
-
-<!-- mutate(port_origin = str_trunc(port_origin, 25), -->
-
-<!-- ## working with factors -->
-
-<!-- plants <- tt$plants %>% -->
-<!--   mutate(year_last_seen = fct_relevel(year_last_seen, "Before 1900")) %>% -->
-<!--   separate(binomial_name, c("genus", "species"), sep = " ", remove = FALSE) -->

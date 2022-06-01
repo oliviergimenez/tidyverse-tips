@@ -1,6 +1,17 @@
+---
+title: "Tidyverse tips gathered from Dave Robinson's screencasts"
+author: "Olivier Gimenez"
+date: "June 1, 2022"
+output: 
+  html_document:
+    keep_md: true
+---
+
+
+
 # Motivation
 
-Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations in the `Tidyverse` framework. Hopefully, these notes will be useful to others. I assume you know the basics of the Tidyverse. If not, check out the [quick and dirty introduction to the `Tidyverse`](https://github.com/oliviergimenez/intro_tidyverse#introduction-to-the-tidyverse){:target="_blank" rel="noopener"} I wrote some time ago. 
+Below are some notes I have taken on David Robinson's screencasts, with tips and tricks I use for my own `R` peregrinations in the `Tidyverse` framework. Hopefully, these notes will be useful to others. I assume you know the basics of the Tidyverse. If not, check out the [quick and dirty introduction to the `Tidyverse`](https://oliviergimenez.github.io/reproducible-science-workshop/){:target="_blank" rel="noopener"} I wrote some time ago. 
 
 It took me some time to fully transition from base `R` to the `Tidyverse`. I really clicked when I started watching screencasts by [David Robinson](http://varianceexplained.org/){:target="_blank" rel="noopener"} on his [Youtube channel](https://www.youtube.com/user/safe4democracy/featured){:target="_blank" rel="noopener"}. 
 
@@ -23,20 +34,20 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
 ```
 
 ```
-## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-## ✓ tibble  3.0.3     ✓ dplyr   1.0.1
-## ✓ tidyr   1.1.1     ✓ stringr 1.4.0
-## ✓ readr   1.3.1     ✓ forcats 0.5.0
+## ✔ ggplot2 3.3.5          ✔ purrr   0.3.4.9000
+## ✔ tibble  3.1.6          ✔ dplyr   1.0.7     
+## ✔ tidyr   1.1.4          ✔ stringr 1.4.0     
+## ✔ readr   2.0.0          ✔ forcats 0.5.1
 ```
 
 ```
-## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 ```
 
 By the way, if you need to explore the functions of a package, a trick is to use the autocompletion in `RStudio`. Just type in `?package_name::` and you should see the functions of the `package_name` package in a pull-down menu. 
@@ -72,19 +83,19 @@ starwars_raw
 ```
 
 ```
-## # A tibble: 87 x 14
-##    name  height  mass hair_color skin_color eye_color birth_year sex   gender
-##    <chr>  <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
-##  1 Luke…    172    77 blond      fair       blue            19   male  mascu…
-##  2 C-3PO    167    75 <NA>       gold       yellow         112   none  mascu…
-##  3 R2-D2     96    32 <NA>       white, bl… red             33   none  mascu…
-##  4 Dart…    202   136 none       white      yellow          41.9 male  mascu…
-##  5 Leia…    150    49 brown      light      brown           19   fema… femin…
-##  6 Owen…    178   120 brown, gr… light      blue            52   male  mascu…
-##  7 Beru…    165    75 brown      light      blue            47   fema… femin…
-##  8 R5-D4     97    32 <NA>       white, red red             NA   none  mascu…
-##  9 Bigg…    183    84 black      light      brown           24   male  mascu…
-## 10 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
+## # A tibble: 87 × 14
+##    name     height  mass hair_color skin_color eye_color birth_year sex   gender
+##    <chr>     <int> <dbl> <chr>      <chr>      <chr>          <dbl> <chr> <chr> 
+##  1 Luke Sk…    172    77 blond      fair       blue            19   male  mascu…
+##  2 C-3PO       167    75 <NA>       gold       yellow         112   none  mascu…
+##  3 R2-D2        96    32 <NA>       white, bl… red             33   none  mascu…
+##  4 Darth V…    202   136 none       white      yellow          41.9 male  mascu…
+##  5 Leia Or…    150    49 brown      light      brown           19   fema… femin…
+##  6 Owen La…    178   120 brown, gr… light      blue            52   male  mascu…
+##  7 Beru Wh…    165    75 brown      light      blue            47   fema… femin…
+##  8 R5-D4        97    32 <NA>       white, red red             NA   none  mascu…
+##  9 Biggs D…    183    84 black      light      brown           24   male  mascu…
+## 10 Obi-Wan…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
 ## # … with 77 more rows, and 5 more variables: homeworld <chr>, species <chr>,
 ## #   films <list>, vehicles <list>, starships <list>
 ```
@@ -110,7 +121,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 87 x 2
+## # A tibble: 87 × 2
 ##    name                    n
 ##    <chr>               <int>
 ##  1 Ackbar                  1
@@ -132,7 +143,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 3 x 2
+## # A tibble: 3 × 2
 ##   gender        n
 ##   <chr>     <int>
 ## 1 masculine    66
@@ -149,7 +160,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 2 x 2
+## # A tibble: 2 × 2
 ##   gender        n
 ##   <chr>     <int>
 ## 1 masculine    66
@@ -166,7 +177,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 42 x 3
+## # A tibble: 42 × 3
 ##    species  gender        n
 ##    <chr>    <chr>     <int>
 ##  1 Human    masculine    26
@@ -192,7 +203,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 38 x 2
+## # A tibble: 38 × 2
 ##    species       n
 ##    <chr>     <dbl>
 ##  1 Aleena       15
@@ -214,7 +225,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 38 x 2
+## # A tibble: 38 × 2
 ##    species       n
 ##    <chr>     <int>
 ##  1 Aleena        1
@@ -238,7 +249,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 87 x 6
+## # A tibble: 87 × 6
 ##    name               gender    species  mass height     n
 ##    <chr>              <chr>     <chr>   <dbl>  <int> <dbl>
 ##  1 Luke Skywalker     masculine Human      77    172 1821.
@@ -265,7 +276,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 3 x 3
+## # A tibble: 3 × 3
 ##   species gender        n
 ##   <chr>   <chr>     <int>
 ## 1 Aleena  masculine     1
@@ -281,7 +292,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 4 x 3
+## # A tibble: 4 × 3
 ##   species gender        n
 ##   <chr>   <chr>     <int>
 ## 1 Aleena  feminine     NA
@@ -300,7 +311,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 4 x 3
+## # A tibble: 4 × 3
 ##   species gender        n
 ##   <chr>   <chr>     <dbl>
 ## 1 Aleena  feminine      0
@@ -313,7 +324,7 @@ starwars %>%
 
 ![](dplyr_across.png)
 
-There is a new function in `dplyr` which allows applying functions to columns of a dataset. In the example below, I compute the mean and standard deviation (storing them in a list) across all columns which have a numeric format (`where(is.numeric)`), while taking care of the missing values (`na.rm = TRUE`):
+There is a function in `dplyr` which allows applying functions to columns of a dataset. In the example below, I compute the mean and standard deviation (storing them in a list) across all columns which have a numeric format (`where(is.numeric)`), while taking care of the missing values (`na.rm = TRUE`):
 
 ```r
 starwars %>%
@@ -323,7 +334,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 1 x 4
+## # A tibble: 1 × 4
 ##   mass_mean mass_sd height_mean height_sd
 ##       <dbl>   <dbl>       <dbl>     <dbl>
 ## 1      97.3    169.        174.      34.8
@@ -340,7 +351,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 18 x 2
+## # A tibble: 18 × 2
 ##    height_classes     n
 ##             <dbl> <int>
 ##  1             60     1
@@ -374,7 +385,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 18 x 2
+## # A tibble: 18 × 2
 ##    height_classes class_size
 ##             <dbl>      <int>
 ##  1             60          1
@@ -408,7 +419,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 4 x 2
+## # A tibble: 4 × 2
 ##   species     n
 ##   <fct>   <int>
 ## 1 Droid       6
@@ -425,7 +436,7 @@ Statistical analyses can easily be piped in your tidyverse workflow. You will fi
 
 ![](broom_package.png)
 
-Also, recommended is [`tidymodels`](https://www.tidymodels.org/){:target="_blank" rel="noopener"} a collection of packages for doing statistical analyses in the machine learning spirit. If you want to learn `tidymodels` by examples, I strongly recommend [Julia Silge's screencasts](https://juliasilge.com/category/tidymodels/){:target="_blank" rel="noopener"} and her [supervised machine learning course](https://juliasilge.com/blog/tidymodels-ml-course/){:target="_blank" rel="noopener"}. 
+Also, recommended is [`tidymodels`](https://www.tidymodels.org/){:target="_blank" rel="noopener"} a collection of packages for doing statistical analyses in the machine learning spirit. If you want to learn `tidymodels` by examples, I strongly recommend [Julia Silge's screencasts](https://juliasilge.com/category/tidymodels/){:target="_blank" rel="noopener"} and her [supervised machine learning course](https://juliasilge.com/blog/tidymodels-ml-course/){:target="_blank" rel="noopener"}. The recent book [Tidy Modeling with R](https://www.tmwr.org/) is awesome, check it out!
 
 ### Simple linear regression
 
@@ -454,7 +465,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 2 x 5
+## # A tibble: 2 × 5
 ##   term        estimate std.error statistic p.value
 ##   <chr>          <dbl>     <dbl>     <dbl>   <dbl>
 ## 1 (Intercept)  -13.8     111.       -0.124   0.902
@@ -470,7 +481,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 1 x 12
+## # A tibble: 1 × 12
 ##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
 ##       <dbl>         <dbl> <dbl>     <dbl>   <dbl> <dbl>  <dbl> <dbl> <dbl>
 ## 1    0.0179      0.000696  169.      1.04   0.312     1  -386.  777.  783.
@@ -505,7 +516,7 @@ starwars %>%
 ## 
 ##     Null deviance: 104.83  on 77  degrees of freedom
 ## Residual deviance: 104.55  on 76  degrees of freedom
-##   (9 observations deleted due to missingness)
+##   (9 observations effacées parce que manquantes)
 ## AIC: 108.55
 ## 
 ## Number of Fisher Scoring iterations: 4
@@ -521,7 +532,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 2 x 5
+## # A tibble: 2 × 5
 ##   term        estimate std.error statistic p.value
 ##   <chr>          <dbl>     <dbl>     <dbl>   <dbl>
 ## 1 (Intercept) -1.03      1.20       -0.856   0.392
@@ -538,7 +549,7 @@ starwars %>%
 ```
 
 ```
-## # A tibble: 78 x 9
+## # A tibble: 78 × 9
 ##    .rownames human height .fitted .resid .std.resid   .hat .sigma .cooksd
 ##    <chr>     <dbl>  <int>   <dbl>  <dbl>      <dbl>  <dbl>  <dbl>   <dbl>
 ##  1 1             1    172  -0.425  1.36       1.37  0.0129   1.17 0.0102 
@@ -590,7 +601,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-25-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
 
 with:
 
@@ -603,7 +614,7 @@ starwars %>%
   geom_col()
 ```
 
-![](unnamed-chunk-26-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 We have reordered the `species` factor by `n` which is created by the call to `count()`, and the `Droid` and `Gungan` species get ordered adequately. Neat isn't it?! The function `fct_reorder()` is another nice feature of the `forcats` package. 
 
@@ -622,7 +633,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-27-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 
 There is exactly what we need in the `tidtext` package. This is the function `reorder_within()` which works with `scale_y_reordered`:
 
@@ -639,7 +650,7 @@ starwars %>%
   facet_wrap(vars(gender))
 ```
 
-![](unnamed-chunk-28-1.png)<!-- -->
+![](index_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
 
 ## Little tricks I always forget about
 
@@ -666,7 +677,7 @@ To improve the reading of your figure, it might be useful to represent the unit 
 
 ### Legend of a map
 
-To draw maps, Dave Robinson uses the `sf` package. Check out the [official site](https://r-spatial.github.io/sf/){:target="_blank" rel="noopener"}. In case you're interested in, I wrote an [introduction to GIS and mapping in `R` using the `sf` package](https://github.com/oliviergimenez/intro_spatialR#introduction-to-gis-and-mapping-in-r-using-the-sf-package){:target="_blank" rel="noopener"}. 
+To draw maps, Dave Robinson uses the `sf` package. Check out the [official site](https://r-spatial.github.io/sf/){:target="_blank" rel="noopener"}. In case you're interested in, I wrote an [introduction to GIS and mapping in `R` using the `sf` package](https://oliviergimenez.github.io/intro_spatialR/){:target="_blank" rel="noopener"}. 
 
 ![](sf.png)
 
